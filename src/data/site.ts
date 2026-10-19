@@ -7,8 +7,6 @@ import vbRecord from '../assets/vetbuddy/record.jpg';
 import vbInbox from '../assets/vetbuddy/inbox.jpg';
 import vbCalendar from '../assets/vetbuddy/calendar.jpg';
 import vbFilmPoster from '../assets/vetbuddy/film-poster.jpg';
-import vbLaunchPoster from '../assets/vetbuddy/launch-poster.jpg';
-import vbWebsitePoster from '../assets/vetbuddy/website-poster.jpg';
 import vbMobile from '../assets/sites/vetbuddy-mobile.jpg';
 import jkWeb from '../assets/sites/jyotikul-web.jpg';
 import jkWelcome from '../assets/apps/jk-welcome.png';
@@ -78,7 +76,6 @@ export const projects: Project[] = [
     short: 'Co-founder, CTO',
     links: [
       { label: 'myvetbuddy.com', href: 'https://myvetbuddy.com' },
-      { label: 'Watch the film', href: '#vetbuddy-film' },
     ],
     scene: {
       url: 'app.myvetbuddy.com',
@@ -107,8 +104,6 @@ export const projects: Project[] = [
       ],
       videos: [
         { src: '/media/vetbuddy-film.mp4', poster: vbFilmPoster, captions: '/media/vetbuddy-film.en.vtt', title: 'Product film', note: '3 minutes, with captions' },
-        { src: '/media/vetbuddy-launch.mp4', poster: vbLaunchPoster, title: 'Client Chats launch film', note: '90 seconds, with voiceover' },
-        { src: '/media/vetbuddy-website.mp4', poster: vbWebsitePoster, title: 'Website hero', note: 'The line draws itself in, 6 seconds', loop: true },
       ],
     },
   },
@@ -357,4 +352,26 @@ export const band: { figures: [string, string][]; versions: [string, string][] }
     ['1.73.0', 'Astrodya API'],
     ['v13', '2048 Puzzle'],
   ],
+};
+
+// What each project is best at, in plain words: the first thing a visitor reads about it.
+export const specialties: Record<string, string[]> = {
+  vetbuddy: ['Consult to clinical note in about 30 s', 'Every line traced to the consult', 'Answers the clinic’s WhatsApp'],
+  jyotikul: ['Live webinars, recorded whole', 'Android, iOS and web, Hindi and English', 'Built in under six weeks'],
+  astrodya: ['Every WhatsApp lead traced to its ad', 'Five WhatsApp providers, one inbox', 'Calls become Hinglish notes'],
+  duet: ['An AI agent tests on a real phone', 'Phone and browser in one test', 'Open source, on npm'],
+  'agent-watch': ['Every Claude Code session in one view', 'Shows which one is waiting on you', 'No server, no open port'],
+  'sort-money': ['Your month, from your bank’s texts', 'A card bill counted once', 'Nothing leaves your phone'],
+  '2048': ['60 levels, each proven winnable', '88,000 automated checks', 'Crash-free in its closed test'],
+};
+
+// A few words per project for the index at the top of the home page.
+export const tags: Record<string, string> = {
+  vetbuddy: 'AI scribe for vet clinics',
+  jyotikul: 'Community app for astrologers',
+  astrodya: 'CRM with calls and WhatsApp',
+  duet: 'Phone and browser testing for AI agents',
+  'agent-watch': 'One view of every Claude Code session',
+  'sort-money': 'Your month, from your bank’s texts',
+  '2048': 'A puzzle game on Google Play',
 };

@@ -1,69 +1,16 @@
 ---
-import '../styles/global.css';
-import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
 import Shot from '../components/Shot.astro';
-import Browser from '../components/Browser.astro';
-import Phone from '../components/Phone.astro';
-import Duo from '../components/Duo.astro';
-import Video from '../components/Video.astro';
-import Flow from '../components/Flow.astro';
-import Art from '../components/Art.astro';
+import ProjectRow from '../components/ProjectRow.astro';
 import Pulse from '../components/Pulse.astro';
-import Stack from '../components/Stack.astro';
-import { execSync } from 'node:child_process';
 import photo from '../assets/aditya.jpg';
-import { person, projects, shipped, alsoBuilt, jobs, feed, callouts, band } from '../data/site';
-import { cases } from '../data/cases';
+import { person, projects, shipped, alsoBuilt, jobs, callouts, specialties, tags } from '../data/site';
 
-const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const description =
   'Aditya Singh builds mobile apps and the servers behind them: an AI scribe for vets, a community app with live webinars, a CRM with calling and WhatsApp, and open-source tools that let coding agents test their own work.';
 const names = Object.fromEntries(projects.map((p) => [p.id, p.name]));
-let revision = 'local';
-try { revision = execSync('git rev-parse --short HEAD').toString().trim(); } catch {}
-const builtOn = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-
-// The log, grouped by month, each month with one line on what it was about.
-const monthThemes: Record<string, string> = {
-  '2026-10': 'Two launches, two films and an app in review.',
-  '2026-09': 'JyotiKul from an empty folder, and a phone in the CRM.',
-  '2026-08': 'Consultations that write their own notes.',
-  '2026-07': 'The sales team gets a CRM in their pocket.',
-};
-const monthGroups = Object.entries(
-  shipped.reduce<Record<string, typeof shipped>>((acc, s) => {
-    const k = s.iso.slice(0, 7);
-    (acc[k] ??= []).push(s);
-    return acc;
-  }, {}),
-).map(([k, items]) => ({
-  key: k,
-  label: new Date(`${k}-01T00:00:00Z`).toLocaleDateString('en-GB', { month: 'long', timeZone: 'UTC' }),
-  theme: monthThemes[k] ?? '',
-  items,
-}));
-
-// Full-size links for the VetBuddy screens, so a visitor can open one large.
 const vb = projects.find((p) => p.id === 'vetbuddy')!;
-const fullScreens =
-  vb.media.kind === 'screens'
-    ? await Promise.all(vb.media.screens.map((s) => getImage({ src: s.src, width: s.src.width, format: 'webp', quality: 82 })))
-    : [];
-
-// The voice line: bars shaped like speech, split into three groups that breathe out of step.
-const bars = 168;
-const voice = [0, 1, 2].map((group) => {
-  let d = '';
-  for (let i = group; i < bars; i += 3) {
-    const t = i / bars;
-    const syllables = Math.abs(Math.sin(i * 0.23) * Math.sin(i * 0.051 + 1.3));
-    const breath = 0.35 + 0.65 * Math.pow(Math.sin(Math.PI * t), 0.6);
-    const h = Math.round(4 + 60 * syllables * breath * (0.6 + 0.4 * Math.abs(Math.sin(i * 1.7))));
-    const x = Math.round((i + 0.5) * (1800 / bars));
-    d += `M${x} ${75 - h}V${75 + h}`;
-  }
-  return d;
-});
+const vbFilm = vb.media.kind === 'screens' ? vb.media.videos[0] : undefined;
 
 const jobKey: Record<string, string> = {
   myVetbuddy: 'vetbuddy',
@@ -72,341 +19,83 @@ const jobKey: Record<string, string> = {
   'MJP Rohilkhand University': 'uni',
 };
 const jobOrder = ['Astrodya', 'myVetbuddy', 'Yellow Owl Publisher', 'MJP Rohilkhand University'];
-const alsoStatus: Record<string, string> = {
-  'Spine and pContext': 'private, works',
-  Puzzlebox: 'store-ready',
-  'Chain Pop Blast': 'prototype',
-  'Runner Obstacle Kit': 'not listed yet',
-  netmon: 'local tool',
-};
-
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: person.name,
-  jobTitle: 'Full-stack engineer',
-  url: site + '/',
-  email: `mailto:${person.email}`,
-  address: { '@type': 'PostalAddress', addressLocality: 'Gurugram', addressCountry: 'IN' },
-  sameAs: [person.github, person.linkedin, person.npm],
-  worksFor: [
-    { '@type': 'Organization', name: 'myVetbuddy', url: 'https://myvetbuddy.com' },
-    { '@type': 'Organization', name: 'Astrodya', url: 'https://www.astrodya.com' },
-  ],
-};
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Aditya Singh, full-stack engineer</title>
-    <meta name="description" content={description} />
-    <link rel="canonical" href={site + '/'} />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#f4f2ed" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0b0a09" media="(prefers-color-scheme: dark)" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="preload" href="/fonts/anek-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <meta property="og:type" content="profile" />
-    <meta property="og:title" content="Aditya Singh, full-stack engineer" />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={site + '/'} />
-    <meta property="og:image" content={site + '/og.png'} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Aditya Singh: I build the app on your phone and the server behind it." />
-    <meta name="twitter:card" content="summary_large_image" />
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
-  </head>
-  <body>
-    <a class="skip" href="#tour">Skip to the work</a>
-
-    <header class="wrap top">
-      <a class="brand" href="#top"><span class="dot"></span>Aditya Singh</a>
-      <nav aria-label="Sections">
-        <a href="#tour">Work</a>
-        <a href="#shipped">Timeline</a>
-        <a class="wide" href="#colophon">This page</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
-
-    <main id="top">
-      <section class="hero wrap" aria-labelledby="hero-title">
-        <div class="hero-grid">
-          <div>
-            <div class="who">
-              <Shot src={photo} alt="Aditya Singh" widths={[48]} sizes="48px" eager />
-              <p><b>{person.name}</b><span>Full-stack engineer · Gurugram, India</span></p>
-            </div>
-            <h1 id="hero-title">I build the app on your phone and the server behind it.</h1>
-            <p class="lede">
-              Co-founder and CTO at myVetbuddy, full-stack developer at Astrodya. This year: an AI scribe for vets, a
-              community app with live webinars, a CRM that runs a sales floor, and open-source tools that let coding
-              agents test their own work.
-            </p>
-            <div class="actions">
-              <a class="button" href="#tour">See the work</a>
-              <a class="textlink" href={`mailto:${person.email}`}>Email me</a>
-              <a class="textlink" href={person.github}>GitHub</a>
-              <a class="textlink" href={person.linkedin}>LinkedIn</a>
-            </div>
-            <p class="now"><span class="dot"></span>Now: JyotiKul for iOS is in App Store review</p>
-          </div>
-          <ul class="feed" aria-label="Recent work">
-            {feed.map((f) => (
-              <li class={`chip c-${f.id}`}>
-                <span class="glyph" aria-hidden="true"><span class="dot"></span></span>
-                <span><b>{f.title}</b><i>{f.when}</i></span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <figure class="voice" aria-hidden="true">
-          <svg viewBox="0 0 1800 150" preserveAspectRatio="none">
-            <path class="v1" d={voice[0]}></path>
-            <path class="v2" d={voice[1]}></path>
-            <path class="v3" d={voice[2]}></path>
-          </svg>
-        </figure>
-      </section>
-
-      <section id="tour" class="section wrap" aria-labelledby="tour-title">
-        <p class="kicker">The work</p>
-        <h2 class="h2" id="tour-title">Seven things I built.</h2>
-        <p class="intro">Pick one to see it on a phone and in a browser. Further down, each one is explained: how it works, and the part that was hard.</p>
-        <div class="picker">
-          <fieldset class="choices">
-            <legend>Pick a project</legend>
-            {projects.map((p, i) => (
-              <div class={`choice c-${p.id}`}>
-                <input type="radio" name="project" id={`pick-${p.id}`} value={p.id} checked={i === 0} />
-                <label for={`pick-${p.id}`}>
-                  <span class="dot"></span>
-                  <span class="name">{p.name}</span>
-                  <span class="state">{p.short}</span>
-                </label>
-              </div>
-            ))}
-          </fieldset>
-          <div class="stage">
-            {projects.map((p, i) => (
-              <figure class={`scene c-${p.id}`}>
-                <Duo name={p.name} url={p.scene.url} web={p.scene.web} phone={p.scene.phone} callouts={callouts[p.id]} eager={i === 0} />
-                <figcaption>
-                  <p><b>{p.name}.</b> {p.line}</p>
-                  <a class="textlink" href={`#${p.id}`}>How {p.name} works</a>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div class="band" aria-hidden="true">
-        <div class="band-row">
-          {[0, 1].map(() => (
-            <span>{band.figures.map(([n, l]) => <>{n}<small>{l}</small></>)}</span>
-          ))}
-        </div>
-        <div class="band-row rev">
-          {[0, 1].map(() => (
-            <span>{band.versions.map(([n, l]) => <>{n}<small>{l}</small></>)}</span>
-          ))}
-        </div>
+<Base title="Aditya Singh, full-stack engineer" description={description} path="/">
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero-text">
+      <div class="who">
+        <Shot src={photo} alt="Aditya Singh" widths={[48]} sizes="48px" eager />
+        <p><b>{person.name}</b><span>Full-stack engineer · Gurugram, India</span></p>
       </div>
+      <h1 id="hero-title">I build the app on your phone and the server behind it.</h1>
+      <p class="lede">Co-founder and CTO at myVetbuddy. Full-stack developer at Astrodya.</p>
+      <div class="actions">
+        <a class="button" href={`mailto:${person.email}`}>Email me</a>
+        <a class="textlink" href={person.github}>GitHub</a>
+        <a class="textlink" href={person.linkedin}>LinkedIn</a>
+      </div>
+    </div>
+    <nav class="index" aria-label="What I built">
+      <p class="kicker">Seven things I built</p>
+      <ol>
+        {projects.map((p) => (
+          <li class={`c-${p.id}`}>
+            <a href={`#${p.id}`}><span class="dot"></span><b>{p.name}</b><span>{tags[p.id]}</span></a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  </section>
 
-      {projects.map((p) => {
-        const c = cases[p.id];
+  <section id="work" class="work wrap" aria-label="Work">
+    {projects.map((p, i) => (
+      <ProjectRow
+        p={p}
+        tag={tags[p.id]}
+        specialties={specialties[p.id]}
+        callouts={callouts[p.id]}
+        video={p.id === 'vetbuddy' ? vbFilm : undefined}
+        eager={i === 1}
+      />
+    ))}
+  </section>
+
+  <section class="section wrap" aria-labelledby="shipped-title">
+    <p class="kicker">Timeline</p>
+    <h2 class="h2" id="shipped-title">Every day since July.</h2>
+    <Pulse />
+    <ol class="latest">
+      {shipped.slice(0, 5).map((s) => (
+        <li class={`c-${s.id}`}><time datetime={s.iso}>{s.date}</time><span><b>{names[s.id]}</b> {s.text}</span></li>
+      ))}
+    </ol>
+    <a class="go" href="/timeline/">Everything I shipped since July<span aria-hidden="true"> →</span></a>
+  </section>
+
+  <section class="section wrap" aria-labelledby="career-title">
+    <p class="kicker">Work history</p>
+    <h2 class="h2" id="career-title">Where I have worked.</h2>
+    <div class="career">
+      <div class="years" aria-hidden="true">{[2020, 2021, 2022, 2023, 2024, 2025, 2026].map((y) => <span>{y}</span>)}</div>
+      {jobOrder.map((org) => {
+        const j = jobs.find((x) => x.org === org)!;
+        const key = jobKey[org];
+        const now = j.when.endsWith('now');
         return (
-          <article class={`case wrap c-${p.id}`} id={p.id} aria-labelledby={`${p.id}-title`}>
-            <header class="case-head">
-              <p class="kicker"><span class="dot"></span>{p.role}</p>
-              <h2 class="h2" id={`${p.id}-title`}>{p.name}</h2>
-              <p class="case-line">{p.line}</p>
-              <div class="case-links">
-                <span class="mono">{p.status}</span>
-                {p.links.map((l) => <a class="textlink" href={l.href}>{l.label}</a>)}
-              </div>
-            </header>
-
-            <dl class="numbers">
-              {c.numbers.map((n) => (
-                <div><dt>{n.value}</dt><dd>{n.label}</dd></div>
-              ))}
-            </dl>
-
-            {p.id === 'jyotikul' && <Stack />}
-
-            <div class="case-media">
-              {p.media.kind === 'screens' && (
-                <div class="media-row">
-                  <Duo name="" url={p.media.main.url} web={p.media.main.shot} phone={p.scene.phone} />
-                  <div class="shots">
-                    {p.media.screens.map((s, i) => (
-                      <figure>
-                        <a href={fullScreens[i]?.src} aria-label={`Open full size: ${s.caption}`}>
-                          <Shot src={s.src} alt={s.alt} widths={[400]} sizes="(max-width: 760px) 30vw, 400px" />
-                        </a>
-                        <figcaption>{s.caption}</figcaption>
-                      </figure>
-                    ))}
-                  </div>
-                  <div class="films">
-                    {p.media.videos.map((v, i) => <Video video={v} id={i === 0 ? `${p.id}-film` : undefined} />)}
-                  </div>
-                </div>
-              )}
-              {p.media.kind === 'phones' && p.id === 'sort-money' && (
-                <Duo name="" url={p.scene.url} web={p.scene.web} phone={p.scene.phone} />
-              )}
-              {p.media.kind === 'phones' && (
-                <div class={`phones n${p.media.phones.length}`}>
-                  {p.media.phones.map((ph) => (
-                    <figure>
-                      <Phone phone={ph} widths={[300]} sizes="(max-width: 760px) 30vw, 300px" />
-                      {ph.caption && <figcaption>{ph.caption}</figcaption>}
-                    </figure>
-                  ))}
-                </div>
-              )}
-              {p.media.kind === 'video' && <Video video={p.media.video} />}
-              {p.media.kind === 'browser' && (
-                <Browser url={p.media.url} shot={p.media.shot} widths={[1000]} sizes="(max-width: 1240px) 94vw, 1000px" />
-              )}
-              {p.media.kind === 'diagram' && <Duo name="" url={p.scene.url} web={p.scene.web} phone={p.scene.phone} />}
-            </div>
-
-            <section class="how" aria-label={`How ${p.name} works`}>
-              <div class="how-head"><h3 class="h3">How it works</h3></div>
-              <Flow steps={c.how} />
-              {p.id === 'duet' && (
-                <pre class="scenario"><code><span class="cm"># abridged from examples/comment-after-rename.yaml in the repo</span>
-<span class="k">actors</span>:
-  <span class="k">maya</span>:  {'{'} <span class="k">browser</span>: {'{'} <span class="k">url</span>: <span class="s">http://localhost:8765/?post=1&amp;as=maya</span> {'}'} {'}'}
-  <span class="k">phone</span>: {'{'} <span class="k">phone</span>: {'{'} <span class="k">package</span>: <span class="s">dev.duet.community</span> {'}'} {'}'}
-<span class="k">steps</span>: |
-  phone: tap --text "Write a comment"
-  phone: type "Looks great on mobile too"
-  phone: tap --text "Post" --exact
-  maya: wait-for --text "Looks great on mobile too" --timeout 5000
-  phone: tap --text "Profile" --exact
-  phone: type "Alex Rivera"
-  maya: wait-for --text "Alex Rivera" --timeout 6000</code></pre>
-              )}
-              {p.install && <pre class="install">{p.install}</pre>}
-            </section>
-
-            <section class="hard" aria-label={`The hard part of ${p.name}`}>
-              <div class="hard-text">
-                <p class="kicker">The hard part</p>
-                <h3 class="h3">{c.hard.title}</h3>
-                <p>{c.hard.text}</p>
-              </div>
-              <Art kind={c.hard.art} />
-            </section>
-
-            <div class="case-foot">
-              {c.more && (
-                <details class="more">
-                  <summary>For engineers<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg></summary>
-                  <div>{c.more.map((m) => <p>{m}</p>)}</div>
-                </details>
-              )}
-              <p class="stack">Built with {p.stack}</p>
-            </div>
-          </article>
+          <div class={`job c-${key}`}>
+            <div class:list={['lane', { now }]} aria-hidden="true"><span class={`span s-${key}`}><em>{j.when}</em></span></div>
+            <div class="info"><b>{j.org}</b><span>{j.role}. {j.text}</span></div>
+          </div>
         );
       })}
+    </div>
+  </section>
 
-      <section id="shipped" class="section wrap" aria-labelledby="shipped-title">
-        <p class="kicker">Timeline</p>
-        <h2 class="h2" id="shipped-title">Sixteen weeks, day by day.</h2>
-        <p class="intro">Every bar is a day since 1 July, as tall as the commits I made that day. A coloured dot marks each release, and the list below says what it was.</p>
-        <Pulse />
-        <div class="log">
-          {monthGroups.map((m) => (
-            <section class="month" aria-label={m.label}>
-              <header class="month-head"><h3 class="h3">{m.label}</h3><p>{m.theme}</p></header>
-              <ol>
-                {m.items.map((s) => (
-                  <li class={`c-${s.id}`}>
-                    <time datetime={s.iso}>{s.date}</time>
-                    <span class="what"><b>{names[s.id]}</b><span>{s.text}</span></span>
-                  </li>
-                ))}
-              </ol>
-            </section>
-          ))}
-        </div>
-      </section>
-
-      <section id="career" class="section wrap" aria-labelledby="career-title">
-        <p class="kicker">Work history</p>
-        <h2 class="h2" id="career-title">Where I have worked.</h2>
-        <p class="intro">Drawn to scale. Yes, some of it overlaps.</p>
-        <div class="career">
-          <div class="years" aria-hidden="true">{[2020, 2021, 2022, 2023, 2024, 2025, 2026].map((y) => <span>{y}</span>)}</div>
-          {jobOrder.map((org) => {
-            const j = jobs.find((x) => x.org === org)!;
-            const key = jobKey[org];
-            const now = j.when.endsWith('now');
-            return (
-              <div class={`job c-${key}`}>
-                <div class:list={['lane', { now }]} aria-hidden="true"><span class={`span s-${key}`}><em>{j.when}</em></span></div>
-                <div class="info"><b>{j.org}</b><span>{j.role}. {j.text}</span></div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      <section id="also" class="section wrap" aria-labelledby="also-title">
-        <p class="kicker">Also built</p>
-        <h2 class="h2" id="also-title">Smaller things.</h2>
-        <ul class="also">
-          {alsoBuilt.map((a) => (
-            <li><b>{a.name}</b><span>{a.text}</span><em>{alsoStatus[a.name] ?? ''}</em></li>
-          ))}
-          <li><b>Earlier</b><span>A railway booking app, a Frank and Oak storefront, a sorting visualizer and local Whisper transcription.</span><em><a href={`${person.github}?tab=repositories`}>on GitHub</a></em></li>
-        </ul>
-      </section>
-
-      <section id="colophon" class="section wrap" aria-labelledby="colophon-title">
-        <p class="kicker">This page</p>
-        <h2 class="h2" id="colophon-title">How this page works.</h2>
-        <div class="colophon">
-          <div><b>No JavaScript</b><p>Not one line. It is HTML and CSS, and its security policy forbids scripts outright.</p><code>script-src 'none'</code></div>
-          <div><b>The project picker</b><p>Seven radio buttons. CSS shows the scene for whichever one is checked.</p><code>.picker:has(input:checked)</code></div>
-          <div><b>The motion</b><p>Each drawing plays as it scrolls into view. With reduced motion on, or in a browser without support, you get the finished layout.</p><code>animation-timeline: view()</code></div>
-          <div><b>The heatmap</b><p>Counted from git logs across 34 repos when the site is built, then frozen into plain HTML.</p><code>git log --since=2026-07-01</code></div>
-          <div><b>The type</b><p>Anek, from Ek Type in India: wide for headings, normal for reading. IBM Plex Mono for dates and code.</p><code>font-stretch: 120%</code></div>
-          <div><b>The weight</b><p>Images are AVIF or WebP at the size you need, and films load only when you press play.</p><code>preload="none"</code></div>
-          <div><b>The stack drawing</b><p>Five slabs in CSS 3D. They pull apart as you scroll, because their distance is an animation on the scroll position.</p><code>transform-style: preserve-3d</code></div>
-          <div><b>This build</b><p>Built on {builtOn} from revision {revision}. Right-click and view source: it is all there.</p><code>0 KB of JavaScript</code></div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="wrap" id="contact">
-      <section class="contact" aria-labelledby="contact-title">
-        <p class="kicker">Contact</p>
-        <h2 class="h2" id="contact-title">Have something to build?</h2>
-        <p class="intro">The quickest way to reach me is email.</p>
-        <a class="mail" href={`mailto:${person.email}`}>{person.email}</a>
-        <div class="elsewhere">
-          <a class="textlink" href={person.github}>GitHub</a>
-          <a class="textlink" href={person.linkedin}>LinkedIn</a>
-          <a class="textlink" href={person.npm}>npm</a>
-        </div>
-      </section>
-      <p class="wordmark" lang="hi" aria-hidden="true">आदित्य सिंह</p>
-      <div class="foot-line">
-        <span>Aditya Singh · Gurugram, India · updated {person.updated}</span>
-        <span>Source on <a href="https://github.com/AdityaSingh-byte/portfolio">GitHub</a>. No tracking, no cookies.</span>
-      </div>
-    </footer>
-  </body>
-</html>
+  <section class="section wrap" aria-labelledby="also-title">
+    <p class="kicker">Also built</p>
+    <ul class="also-list" id="also-title">
+      {alsoBuilt.map((a) => <li><b>{a.name}</b> {a.text}</li>)}
+      <li><b>Earlier</b> a railway booking app, a Frank and Oak storefront and more, <a href={`${person.github}?tab=repositories`}>on GitHub</a>.</li>
+    </ul>
+  </section>
+</Base>

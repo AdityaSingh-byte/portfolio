@@ -1,0 +1,45 @@
+---
+// One project on the home page: a big preview, a few words, three specialties,
+// a link to the real thing and a link to the full story.
+import Duo from './Duo.astro';
+import Video from './Video.astro';
+import type { Project, Video as VideoData } from '../data/site';
+
+interface Props {
+  p: Project;
+  tag: string;
+  specialties: string[];
+  callouts?: string[];
+  video?: VideoData;
+  eager?: boolean;
+}
+
+const { p, tag, specialties, callouts, video, eager } = Astro.props;
+const outside = p.links.filter((l) => !l.href.startsWith('#'));
+const [visit, ...rest] = outside;
+---
+<article class={`project c-${p.id}`} id={p.id} aria-labelledby={`${p.id}-name`}>
+  <div class="project-text">
+    <p class="kicker"><span class="dot"></span>{p.role}</p>
+    <h3 class="project-name" id={`${p.id}-name`}>{p.name}</h3>
+    <p class="project-tag">{tag}</p>
+    <ul class="specials">
+      {specialties.map((s) => <li>{s}</li>)}
+    </ul>
+    <p class="project-status">{p.status}</p>
+    <div class="project-links">
+      {visit && <a class="go" href={visit.href}>{visit.label}<span aria-hidden="true"> ↗</span></a>}
+      <a class="go" href={`/work/${p.id}/`}>How I built it<span aria-hidden="true"> →</span></a>
+      {rest.map((l) => <a class="textlink" href={l.href}>{l.label}</a>)}
+    </div>
+  </div>
+  <div class="project-preview">
+    {video ? (
+      <Video video={video} />
+    ) : (
+      <a href={`/work/${p.id}/`} aria-label={`How I built ${p.name}`}>
+        <Duo name={p.name} url={p.scene.url} web={p.scene.web} phone={p.scene.phone} callouts={callouts} eager={eager} />
+      </a>
+    )}
+  </div>
+</article>

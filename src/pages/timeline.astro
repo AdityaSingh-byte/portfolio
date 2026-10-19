@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import Pulse from '../components/Pulse.astro';
+import { projects, shipped } from '../data/site';
+
+const names = Object.fromEntries(projects.map((p) => [p.id, p.name]));
+const monthThemes: Record<string, string> = {
+  '2026-10': 'Two launches, a film and an app in review.',
+  '2026-09': 'JyotiKul from an empty folder, and a phone in the CRM.',
+  '2026-08': 'Consultations that write their own notes.',
+  '2026-07': 'The sales team gets a CRM in their pocket.',
+};
+const months = Object.entries(
+  shipped.reduce<Record<string, typeof shipped>>((acc, s) => {
+    (acc[s.iso.slice(0, 7)] ??= []).push(s);
+    return acc;
+  }, {}),
+).map(([k, items]) => ({
+  label: new Date(`${k}-01T00:00:00Z`).toLocaleDateString('en-GB', { month: 'long', timeZone: 'UTC' }),
+  theme: monthThemes[k] ?? '',
+  items,
+}));
+---
+<Base title="Timeline · Aditya Singh" description="Everything Aditya Singh shipped since July 2026, day by day." path="/timeline/">
+  <section class="section wrap first" aria-labelledby="t-title">
+    <p class="kicker">Timeline</p>
+    <h1 class="h2" id="t-title">Sixteen weeks, day by day.</h1>
+    <p class="intro">Every bar is a day since 1 July, as tall as the commits I made that day. A dot marks each release.</p>
+    <Pulse />
+    <div class="log">
+      {months.map((m) => (
+        <section class="month" aria-label={m.label}>
+          <header class="month-head"><h2 class="h3">{m.label}</h2><p>{m.theme}</p></header>
+          <ol>
+            {m.items.map((s) => (
+              <li class={`c-${s.id}`}>
+                <time datetime={s.iso}>{s.date}</time>
+                <span class="what"><b>{names[s.id]}</b><span>{s.text}</span></span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))}
+    </div>
+  </section>
+</Base>

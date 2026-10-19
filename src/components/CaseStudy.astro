@@ -1,0 +1,127 @@
+---
+// One project, explained in full: what it is, the numbers, the screens, how it works,
+// the part that was hard, and the detail an engineer would ask for.
+import { getImage } from 'astro:assets';
+import Shot from './Shot.astro';
+import Browser from './Browser.astro';
+import Phone from './Phone.astro';
+import Duo from './Duo.astro';
+import Video from './Video.astro';
+import Flow from './Flow.astro';
+import Art from './Art.astro';
+import Stack from './Stack.astro';
+import type { Project } from '../data/site';
+import type { Case } from '../data/cases';
+
+interface Props {
+  p: Project;
+  c: Case;
+  specialties: string[];
+}
+
+const { p, c, specialties } = Astro.props;
+const fullScreens =
+  p.media.kind === 'screens'
+    ? await Promise.all(p.media.screens.map((s) => getImage({ src: s.src, width: s.src.width, format: 'webp', quality: 82 })))
+    : [];
+---
+<article class={`case wrap c-${p.id}`} aria-labelledby="case-title">
+  <header class="case-head">
+    <p class="kicker"><a href="/#work">All work</a> <span aria-hidden="true">/</span> <span class="dot"></span>{p.role}</p>
+    <h1 class="h2" id="case-title">{p.name}</h1>
+    <p class="case-line">{p.line}</p>
+    <div class="case-links">
+      <span class="mono">{p.status}</span>
+      {p.links.map((l) => <a class="textlink" href={l.href}>{l.label}</a>)}
+    </div>
+    <dl class="numbers">
+      {c.numbers.map((n) => (
+        <div><dt>{n.value}</dt><dd>{n.label}</dd></div>
+      ))}
+    </dl>
+  </header>
+
+  <ul class="specials">
+    {specialties.map((s) => <li>{s}</li>)}
+  </ul>
+
+  <div class="case-media">
+    {p.media.kind === 'screens' && (
+      <div class="media-row">
+        <figure class="screens__main">
+          <Duo name="" url={p.media.main.url} web={p.media.main.shot} phone={p.scene.phone} eager />
+          <figcaption class="note">{p.media.main.caption}</figcaption>
+        </figure>
+        <div class="shots">
+          {p.media.screens.map((s, i) => (
+            <figure>
+              <a href={fullScreens[i]?.src} aria-label={`Open full size: ${s.caption}`}>
+                <Shot src={s.src} alt={s.alt} widths={[400]} sizes="(max-width: 760px) 30vw, 400px" />
+              </a>
+              <figcaption>{s.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
+        <h2 class="h3" id={`${p.id}-film`}>Films and motion</h2>
+        <div class="films">
+          {p.media.videos.map((v) => <Video video={v} />)}
+        </div>
+      </div>
+    )}
+    {p.media.kind === 'phones' && p.id === 'sort-money' && <Duo name="" url={p.scene.url} web={p.scene.web} phone={p.scene.phone} eager />}
+    {p.media.kind === 'phones' && (
+      <div class={`phones n${p.media.phones.length}`}>
+        {p.media.phones.map((ph) => (
+          <figure>
+            <Phone phone={ph} widths={[300]} sizes="(max-width: 760px) 30vw, 300px" />
+            {ph.caption && <figcaption>{ph.caption}</figcaption>}
+          </figure>
+        ))}
+      </div>
+    )}
+    {p.media.kind === 'video' && <Video video={p.media.video} />}
+    {p.media.kind === 'browser' && <Browser url={p.media.url} shot={p.media.shot} widths={[1000]} sizes="(max-width: 1240px) 94vw, 1000px" eager />}
+    {p.media.kind === 'diagram' && <Duo name="" url={p.scene.url} web={p.scene.web} phone={p.scene.phone} eager />}
+  </div>
+
+  {p.id === 'jyotikul' && <Stack />}
+
+  <section class="how" aria-labelledby="how-title">
+    <h2 class="h3" id="how-title">How it works</h2>
+    <Flow steps={c.how} />
+    {p.id === 'duet' && (
+      <pre class="scenario"><code><span class="cm"># abridged from examples/comment-after-rename.yaml in the repo</span>
+<span class="k">actors</span>:
+  <span class="k">maya</span>: {'{'} <span class="k">browser</span>: {'{'} <span class="k">url</span>: <span class="s">http://localhost:8765/?post=1&amp;as=maya</span> {'}'} {'}'}
+  <span class="k">phone</span>: {'{'} <span class="k">phone</span>: {'{'} <span class="k">package</span>: <span class="s">dev.duet.community</span> {'}'} {'}'}
+<span class="k">steps</span>: |
+  phone: tap --text "Write a comment"
+  phone: type "Looks great on mobile too"
+  phone: tap --text "Post" --exact
+  maya: wait-for --text "Looks great on mobile too" --timeout 5000
+  phone: tap --text "Profile" --exact
+  phone: type "Alex Rivera"
+  maya: wait-for --text "Alex Rivera" --timeout 6000</code></pre>
+    )}
+    {p.install && <pre class="install">{p.install}</pre>}
+  </section>
+
+  <section class="hard" aria-labelledby="hard-title">
+    <div class="hard-text">
+      <p class="kicker">The hard part</p>
+      <h2 class="h3" id="hard-title">{c.hard.title}</h2>
+      <p>{c.hard.text}</p>
+    </div>
+    <Art kind={c.hard.art} />
+  </section>
+
+  <div class="case-foot">
+    {c.more && (
+      <details class="more">
+        <summary>For engineers<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg></summary>
+        <div>{c.more.map((m) => <p>{m}</p>)}</div>
+      </details>
+    )}
+    <p class="stack">Built with {p.stack}</p>
+  </div>
+</article>

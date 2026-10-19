@@ -1,0 +1,22 @@
+---
+import Base from '../../layouts/Base.astro';
+import CaseStudy from '../../components/CaseStudy.astro';
+import { projects, specialties } from '../../data/site';
+import { cases } from '../../data/cases';
+
+export function getStaticPaths() {
+  return projects.map((p) => ({ params: { id: p.id } }));
+}
+
+const { id } = Astro.params;
+const i = projects.findIndex((p) => p.id === id);
+const p = projects[i];
+const next = projects[(i + 1) % projects.length];
+---
+<Base title={`${p.name}: how I built it · Aditya Singh`} description={p.line} path={`/work/${p.id}/`}>
+  <CaseStudy p={p} c={cases[p.id]} specialties={specialties[p.id]} />
+  <nav class="wrap next-project" aria-label="More work">
+    <a href="/#work">All work</a>
+    <a class={`go c-${next.id}`} href={`/work/${next.id}/`}><span class="dot"></span>Next: {next.name}<span aria-hidden="true"> →</span></a>
+  </nav>
+</Base>
