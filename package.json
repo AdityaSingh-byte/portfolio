@@ -1,0 +1,19 @@
+{
+  "name": "aditya-singh-portfolio",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "astro dev --port 8731",
+    "build": "astro build",
+    "preview": "astro preview --port 8732",
+    "deploy": "sh scripts/deploy.sh"
+  },
+  "dependencies": {
+    "astro": "^7.3.7",
+    "sharp": "^0.35.5"
+  }
+}

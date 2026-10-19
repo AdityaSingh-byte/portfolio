@@ -1,0 +1,17 @@
+---
+// A phone drawn in CSS around a real screenshot. `tall` fits 19.5:9 screens, `classic` 16:9.
+import Shot from './Shot.astro';
+import type { Phone as PhoneData } from '../data/site';
+
+interface Props {
+  phone: PhoneData;
+  widths: number[];
+  sizes: string;
+  eager?: boolean;
+}
+
+const { phone, widths, sizes, eager } = Astro.props;
+---
+<div class:list={['phone', `phone--${phone.shape}`]}>
+  <Shot src={phone.src} alt={phone.alt} widths={widths} sizes={sizes} eager={eager} class="phone__screen" />
+</div>

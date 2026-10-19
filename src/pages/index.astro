@@ -1,0 +1,268 @@
+---
+import '../styles/global.css';
+import { getImage } from 'astro:assets';
+import Shot from '../components/Shot.astro';
+import Browser from '../components/Browser.astro';
+import Phone from '../components/Phone.astro';
+import Video from '../components/Video.astro';
+import Diagram from '../components/Diagram.astro';
+import photo from '../assets/aditya.jpg';
+import { person, projects, shipped, alsoBuilt, jobs } from '../data/site';
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const description =
+  'Aditya Singh builds mobile apps and the servers behind them: an AI scribe for vets, a community app with live webinars, WhatsApp and calling systems, and open-source tools for coding agents.';
+
+// Full-size links for the VetBuddy screens, so a visitor can open one large.
+const vb = projects.find((p) => p.id === 'vetbuddy')!;
+const fullScreens =
+  vb.media.kind === 'screens'
+    ? await Promise.all(vb.media.screens.map((s) => getImage({ src: s.src, width: s.src.width, format: 'webp', quality: 82 })))
+    : [];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: person.name,
+  jobTitle: 'Full-stack engineer',
+  url: site + '/',
+  email: `mailto:${person.email}`,
+  address: { '@type': 'PostalAddress', addressLocality: 'Gurugram', addressCountry: 'IN' },
+  sameAs: [person.github, person.linkedin, person.npm],
+  worksFor: [
+    { '@type': 'Organization', name: 'myVetbuddy', url: 'https://myvetbuddy.com' },
+    { '@type': 'Organization', name: 'Astrodya', url: 'https://www.astrodya.com' },
+  ],
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aditya Singh, full-stack engineer</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={site + '/'} />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#101010" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content="Aditya Singh, full-stack engineer" />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={site + '/'} />
+    <meta property="og:image" content={site + '/og.png'} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Aditya Singh: I build the app on your phone and the server behind it." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a class="skip" href="#work">Skip to the work</a>
+
+    <header class="top">
+      <div class="wrap top__in">
+        <a class="top__name" href="#top">Aditya Singh</a>
+        <nav class="top__nav" aria-label="Sections">
+          <a href="#work">Work</a>
+          <a href="#shipped">Shipped</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="wrap">
+          <div class="intro">
+            <div class="who">
+              <Shot src={photo} alt="Aditya Singh" widths={[64]} sizes="64px" class="who__photo" eager />
+              <p class="who__text"><span class="who__name">{person.title}</span><span class="who__title">{person.place}</span></p>
+            </div>
+            <h1 id="hero-title">I build the app on your phone and the server behind it.</h1>
+            <p class="lead">
+              Co-founder and CTO at myVetbuddy, full-stack developer at Astrodya. Lately: an AI scribe for vets, a community
+              app with live webinars, and open-source tools that let coding agents test their own work.
+            </p>
+            <div class="actions">
+              <a class="button" href={`mailto:${person.email}`}>Email me</a>
+              <a href={person.github}>GitHub</a>
+              <a href={person.linkedin}>LinkedIn</a>
+            </div>
+          </div>
+
+          <div class="picker">
+            <fieldset class="choices">
+              <legend>Pick something I made</legend>
+              {projects.map((p, i) => (
+                <div class="choice">
+                  <input type="radio" name="project" id={`pick-${p.id}`} value={p.id} checked={i === 0} />
+                  <label for={`pick-${p.id}`}>
+                    <span class="choice__name">{p.name}</span>
+                    <span class="choice__status">{p.short}</span>
+                  </label>
+                </div>
+              ))}
+            </fieldset>
+
+            <div class="stage">
+              {projects.map((p, i) => {
+                const layout = p.scene.web && p.scene.phone ? 'both' : p.scene.web ? 'web' : 'phone';
+                return (
+                  <figure class={`scene scene--${layout}`}>
+                    <div class="scene__devices">
+                      {p.scene.web && (
+                        <Browser
+                          url={p.scene.url ?? ''}
+                          shot={p.scene.web}
+                          widths={layout === 'both' ? [580] : [680]}
+                          sizes={layout === 'both' ? '(max-width: 900px) 84vw, 580px' : '(max-width: 900px) 96vw, 680px'}
+                          eager={i === 0}
+                        />
+                      )}
+                      {p.scene.phone && (
+                        <Phone
+                          phone={p.scene.phone}
+                          widths={layout === 'both' ? [190] : [240]}
+                          sizes={layout === 'both' ? '(max-width: 900px) 27vw, 190px' : '(max-width: 900px) 40vw, 240px'}
+                          eager={i === 0}
+                        />
+                      )}
+                    </div>
+                    <figcaption class="scene__caption">
+                      <span class="scene__line"><strong>{p.name}.</strong> {p.line}</span>
+                      <a href={`#${p.id}`}>More about {p.name}</a>
+                    </figcaption>
+                  </figure>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="work" class="wrap" aria-label="Work">
+        {projects.map((p) => (
+          <article class="work" id={p.id} aria-labelledby={`${p.id}-title`}>
+            <header class="work__head">
+              <p class="meta">{p.role}</p>
+              <h2 id={`${p.id}-title`}>{p.name}</h2>
+              <p class="work__line">{p.line}</p>
+              <p class="meta">{p.status}</p>
+              <p class="work__links">
+                {p.links.map((l) => <a href={l.href}>{l.label}</a>)}
+              </p>
+            </header>
+
+            <div class="work__media">
+              {p.media.kind === 'phones' && (
+                <div class="phones">
+                  {p.media.phones.map((ph) => (
+                    <figure class="phones__item">
+                      <Phone phone={ph} widths={[220]} sizes="(max-width: 900px) 30vw, 220px" />
+                      {ph.caption && <figcaption>{ph.caption}</figcaption>}
+                    </figure>
+                  ))}
+                </div>
+              )}
+              {p.media.kind === 'screens' && (
+                <figure class="screens__main">
+                  <Browser url={p.media.main.url} shot={p.media.main.shot} widths={[680]} sizes="(max-width: 900px) 92vw, 680px" />
+                  <figcaption>{p.media.main.caption}</figcaption>
+                </figure>
+              )}
+              {p.media.kind === 'screens' && (
+                <div class="screens">
+                  {p.media.screens.map((s, i) => (
+                    <figure class="screens__item">
+                      <a href={fullScreens[i]?.src} aria-label={`Open full size: ${s.caption}`}>
+                        <Shot src={s.src} alt={s.alt} widths={[220]} sizes="(max-width: 900px) 30vw, 220px" />
+                      </a>
+                      <figcaption>{s.caption}</figcaption>
+                    </figure>
+                  ))}
+                </div>
+              )}
+              {p.media.kind === 'video' && <Video video={p.media.video} />}
+              {p.media.kind === 'browser' && (
+                <Browser url={p.media.url} shot={p.media.shot} widths={[680]} sizes="(max-width: 900px) 92vw, 680px" />
+              )}
+              {p.media.kind === 'diagram' && <Diagram />}
+            </div>
+
+            <div class="work__body">
+              <ul class="facts">
+                {p.facts.map((f) => <li>{f}</li>)}
+              </ul>
+              {p.install && (
+                <pre class="install"><code>{p.install}</code></pre>
+              )}
+              <p class="meta">Built with {p.stack}</p>
+            </div>
+
+            {p.media.kind === 'screens' && (
+              <div class="work__films">
+                {p.media.videos.map((v, i) => (
+                  <Video video={v} id={i === 0 ? `${p.id}-film` : undefined} />
+                ))}
+              </div>
+            )}
+          </article>
+        ))}
+      </section>
+
+      <section id="shipped" class="wrap" aria-labelledby="shipped-title"><div class="block">
+        <h2 id="shipped-title">Shipped lately</h2>
+        <ol class="rows">
+          {shipped.map((s) => (
+            <li class="row">
+              <time class="row__when" datetime={s.iso}>{s.date}</time>
+              <span>{s.text}</span>
+            </li>
+          ))}
+        </ol>
+      </div></section>
+
+      <section class="wrap" aria-labelledby="also-title"><div class="block">
+        <h2 id="also-title">Also built</h2>
+        <ul class="rows">
+          {alsoBuilt.map((a) => (
+            <li class="row">
+              <span class="row__when row__name">{a.name}</span>
+              <span>{a.text}</span>
+            </li>
+          ))}
+          <li class="row">
+            <span class="row__when row__name">Earlier</span>
+            <span>A railway booking app, a Frank and Oak storefront, a sorting visualizer and local Whisper transcription, <a href={`${person.github}?tab=repositories`}>on GitHub</a>.</span>
+          </li>
+        </ul>
+      </div></section>
+
+      <section class="wrap" aria-labelledby="jobs-title"><div class="block">
+        <h2 id="jobs-title">Where I have worked</h2>
+        <ol class="rows">
+          {jobs.map((j) => (
+            <li class="row">
+              <span class="row__when">{j.when}</span>
+              <span><strong>{j.org}</strong>, {j.role}. {j.text}</span>
+            </li>
+          ))}
+        </ol>
+      </div></section>
+    </main>
+
+    <footer id="contact" class="wrap"><div class="foot">
+      <p class="foot__lead">The quickest way to reach me is email.</p>
+      <a class="foot__mail" href={`mailto:${person.email}`}>{person.email}</a>
+      <nav class="foot__links" aria-label="Elsewhere">
+        <a href={person.github}>GitHub</a>
+        <a href={person.linkedin}>LinkedIn</a>
+        <a href={person.npm}>npm</a>
+      </nav>
+      <p class="meta">Updated {person.updated}. A static page with no tracking.</p>
+    </div></footer>
+  </body>
+</html>

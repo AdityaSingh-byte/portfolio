@@ -1,0 +1,21 @@
+---
+// A browser window drawn in CSS: an address bar with the real address, then the page.
+import Shot from './Shot.astro';
+import type { Shot as ShotData } from '../data/site';
+
+interface Props {
+  url: string;
+  shot: ShotData;
+  widths: number[];
+  sizes: string;
+  eager?: boolean;
+}
+
+const { url, shot, widths, sizes, eager } = Astro.props;
+---
+<div class="browser">
+  <div class="browser__bar" aria-hidden="true"><span class="browser__url">{url}</span></div>
+  <div class="browser__view">
+    <Shot src={shot.src} srcDark={shot.srcDark} alt={shot.alt} widths={widths} sizes={sizes} eager={eager} />
+  </div>
+</div>

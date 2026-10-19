@@ -1,0 +1,30 @@
+---
+// A film that plays only when asked: no autoplay, nothing downloads until play.
+import { getImage } from 'astro:assets';
+import type { Video as VideoData } from '../data/site';
+
+interface Props {
+  video: VideoData;
+  id?: string;
+}
+
+const { video, id } = Astro.props;
+const poster = await getImage({ src: video.poster, width: Math.min(1280, video.poster.width), format: 'webp', quality: 78 });
+---
+<figure class="film" id={id}>
+  <video
+    controls
+    loop={video.loop}
+    muted={video.loop}
+    preload="none"
+    playsinline
+    poster={poster.src}
+    width={video.poster.width}
+    height={video.poster.height}
+    aria-label={video.title}
+  >
+    <source src={video.src} type="video/mp4" />
+    {video.captions && <track kind="captions" src={video.captions} srclang="en" label="English" />}
+  </video>
+  <figcaption><span class="film__title">{video.title}</span> <span class="film__note">{video.note}</span></figcaption>
+</figure>
