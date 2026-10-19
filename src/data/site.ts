@@ -76,6 +76,7 @@ export const projects: Project[] = [
     short: 'Co-founder, CTO',
     links: [
       { label: 'myvetbuddy.com', href: 'https://myvetbuddy.com' },
+      { label: 'Watch the film', href: '#vetbuddy-film' },
     ],
     scene: {
       url: 'app.myvetbuddy.com',
@@ -87,7 +88,7 @@ export const projects: Project[] = [
       'Client Chats: the clinic’s WhatsApp and SMS in one shared inbox, with an assistant that answers from the clinic’s own profile and hands anything about a pet’s health to the vet.',
       'Audited 37 screens and 198 issues, then redesigned the whole web app around a calmer, faster layout.',
       'A Chrome extension that pastes finished notes into ezyVet, and a practice-management system built on OpenVPM.',
-      'Built the new website, its animated hero and both films. The motion scenes are written in HTML and CSS, then rendered to video.',
+      'Built the new website and the product film. The motion scenes are written in HTML and CSS, then rendered to video.',
     ],
     stack: 'React, TypeScript, Node, PostgreSQL, Twilio, Google Cloud, AWS, Astro',
     media: {
@@ -352,26 +353,4 @@ export const band: { figures: [string, string][]; versions: [string, string][] }
     ['1.73.0', 'Astrodya API'],
     ['v13', '2048 Puzzle'],
   ],
-};
-
-// What each project is best at, in plain words: the first thing a visitor reads about it.
-export const specialties: Record<string, string[]> = {
-  vetbuddy: ['Consult to clinical note in about 30 s', 'Every line traced to the consult', 'Answers the clinic’s WhatsApp'],
-  jyotikul: ['Live webinars, recorded whole', 'Android, iOS and web, Hindi and English', 'Built in under six weeks'],
-  astrodya: ['Every WhatsApp lead traced to its ad', 'Five WhatsApp providers, one inbox', 'Calls become Hinglish notes'],
-  duet: ['An AI agent tests on a real phone', 'Phone and browser in one test', 'Open source, on npm'],
-  'agent-watch': ['Every Claude Code session in one view', 'Shows which one is waiting on you', 'No server, no open port'],
-  'sort-money': ['Your month, from your bank’s texts', 'A card bill counted once', 'Nothing leaves your phone'],
-  '2048': ['60 levels, each proven winnable', '88,000 automated checks', 'Crash-free in its closed test'],
-};
-
-// A few words per project for the index at the top of the home page.
-export const tags: Record<string, string> = {
-  vetbuddy: 'AI scribe for vet clinics',
-  jyotikul: 'Community app for astrologers',
-  astrodya: 'CRM with calls and WhatsApp',
-  duet: 'Phone and browser testing for AI agents',
-  'agent-watch': 'One view of every Claude Code session',
-  'sort-money': 'Your month, from your bank’s texts',
-  '2048': 'A puzzle game on Google Play',
 };
