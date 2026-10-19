@@ -1,0 +1,13 @@
+---
+// The theme lab: the same home page under each candidate theme, side by side in tabs.
+import Base from '../../layouts/Base.astro';
+import Home from '../../components/Home.astro';
+
+export function getStaticPaths() {
+  return ['paper', 'schematic', 'notes'].map((theme) => ({ params: { theme } }));
+}
+const { theme } = Astro.params;
+---
+<Base title={`Theme lab: ${theme}`} description="A theme candidate for the portfolio." path={`/lab/${theme}/`} theme={`theme-${theme}`}>
+  <Home />
+</Base>

@@ -1,15 +1,17 @@
 ---
 // Every page: head, the header with the main links, the page, then the contact footer.
 import '../styles/global.css';
+import '../styles/themes.css';
 import { person } from '../data/site';
 
 interface Props {
   title: string;
   description: string;
   path: string;
+  theme?: string;
 }
 
-const { title, description, path } = Astro.props;
+const { title, description, path, theme } = Astro.props;
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const home = path === '/';
 const jsonLd = home
@@ -30,7 +32,7 @@ const jsonLd = home
   : null;
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" class={theme}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -49,6 +51,7 @@ const jsonLd = home
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
+    {theme && <meta name="robots" content="noindex" />}
     {jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body>

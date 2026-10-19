@@ -12,9 +12,10 @@ interface Props {
   callouts?: string[];
   video?: VideoData;
   eager?: boolean;
+  fig?: string;
 }
 
-const { p, tag, specialties, callouts, video, eager } = Astro.props;
+const { p, tag, specialties, callouts, video, eager, fig } = Astro.props;
 const outside = p.links.filter((l) => !l.href.startsWith('#'));
 const [visit, ...rest] = outside;
 ---
@@ -33,7 +34,7 @@ const [visit, ...rest] = outside;
       {rest.map((l) => <a class="textlink" href={l.href}>{l.label}</a>)}
     </div>
   </div>
-  <div class="project-preview">
+  <div class="project-preview" data-fig={fig}>
     {video ? (
       <Video video={video} />
     ) : (

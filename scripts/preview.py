@@ -30,6 +30,8 @@ RULES = load_rules()
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
+    protocol_version = "HTTP/1.1"
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
 
@@ -45,7 +47,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         pass
 
 
-socketserver.TCPServer.allow_reuse_address = True
-with socketserver.ThreadingTCPServer(("127.0.0.1", PORT), Handler) as httpd:
+class Server(socketserver.ThreadingTCPServer):
+    allow_reuse_address = True
+    daemon_threads = True
+    request_queue_size = 64
+
+
+with Server(("127.0.0.1", PORT), Handler) as httpd:
     print(f"preview: http://127.0.0.1:{PORT}")
     httpd.serve_forever()

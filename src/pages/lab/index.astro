@@ -1,0 +1,20 @@
+---
+// The theme lab's front door: every candidate, one line each.
+import Base from '../../layouts/Base.astro';
+
+const themes = [
+  { id: 'schematic', name: 'Schematic', text: 'Engineering paper and blueprint ink. Every preview is a figure with crop marks and a caption. IBM Plex.' },
+  { id: 'notes', name: 'Field notes', text: 'Clean white, a heavy grotesk, and red-pen handwritten notes pointing at the work. Archivo and Kalam, an Indian handwriting face.' },
+  { id: 'paper', name: 'Paper (current)', text: 'The warm paper, grain and engraved type from the last round. Kept here only to compare.' },
+];
+---
+<Base title="Theme lab · Aditya Singh" description="Theme candidates for the portfolio." path="/lab/" theme="theme-lab">
+  <section class="section wrap first" aria-labelledby="lab-title">
+    <p class="kicker">Theme lab</p>
+    <h1 class="h2" id="lab-title">Pick a look.</h1>
+    <p class="intro">The same page under each theme. Open them side by side; each follows your system’s light or dark setting.</p>
+    <ol class="also-list">
+      {themes.map((t) => <li><a class="go" href={`/lab/${t.id}/`}>{t.name}</a> {t.text}</li>)}
+    </ol>
+  </section>
+</Base>

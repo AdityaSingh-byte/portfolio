@@ -1,0 +1,88 @@
+/* =====================================================================================
+   Theme lab. Each theme is a class on <html> that swaps tokens, type and motifs.
+   Compare them at /lab/<name>/. The chosen one becomes the default later.
+   ===================================================================================== */
+@font-face { font-family: 'Plex Sans'; src: url('/fonts/plex-sans.woff2') format('woff2'); font-weight: 100 700; font-stretch: 85% 100%; font-display: swap; }
+@font-face { font-family: 'Archivo'; src: url('/fonts/archivo.woff2') format('woff2'); font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+@font-face { font-family: 'Kalam'; src: url('/fonts/kalam-regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Kalam'; src: url('/fonts/kalam-bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+
+/* ---------- Schematic: engineering paper, blueprint ink, figures with crop marks */
+:root.theme-schematic {
+  --ground: #f5f7fa; --surface: #ffffff; --raised: #edf1f6; --line: #d9e0ea; --line-2: #c0cad8;
+  --text: #0c1625; --text2: #445267; --text3: #58667b;
+  --accent: #1d4ed8; --accent-ink: #163aa3; --on-accent: #ffffff;
+  --glow: transparent; --glow-accent: transparent; --grain: 0;
+  --grid: rgba(29, 78, 216, 0.07);
+  --display: 'Plex Sans', system-ui, sans-serif; --sans: 'Plex Sans', system-ui, sans-serif;
+  --engrave: rgba(12, 22, 37, 0.5); --engrave-edge: rgba(29, 78, 216, 0.22);
+}
+@media (prefers-color-scheme: dark) {
+  :root.theme-schematic {
+    --ground: #08111f; --surface: #0d1829; --raised: #122036; --line: #1c2b45; --line-2: #2a3d5f;
+    --text: #e6edfa; --text2: #a3b2cb; --text3: #8494af;
+    --accent: #79a2ff; --accent-ink: #a9c3ff; --on-accent: #08111f;
+    --grid: rgba(121, 162, 255, 0.07);
+    --engrave: rgba(230, 237, 250, 0.5); --engrave-edge: rgba(121, 162, 255, 0.25);
+  }
+}
+.theme-schematic body::before { background: none; background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 24px 24px; }
+.theme-schematic body::after { display: none; }
+.theme-schematic h1, .theme-schematic .h2, .theme-schematic .project-name, .theme-schematic .numbers dt, .theme-schematic .pulse-stats b { font-stretch: 100%; letter-spacing: -0.035em; font-weight: 600; }
+.theme-schematic .index li b, .theme-schematic .brand { font-stretch: 100%; }
+.theme-schematic .button { border-radius: 4px; }
+.theme-schematic .project-preview { position: relative; padding: 22px; }
+.theme-schematic .project-preview::before, .theme-schematic .project-preview::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(var(--text3), var(--text3)) 0 0 / 16px 1px no-repeat, linear-gradient(var(--text3), var(--text3)) 0 0 / 1px 16px no-repeat,
+    linear-gradient(var(--text3), var(--text3)) 100% 0 / 16px 1px no-repeat, linear-gradient(var(--text3), var(--text3)) 100% 0 / 1px 16px no-repeat,
+    linear-gradient(var(--text3), var(--text3)) 0 100% / 16px 1px no-repeat, linear-gradient(var(--text3), var(--text3)) 0 100% / 1px 16px no-repeat,
+    linear-gradient(var(--text3), var(--text3)) 100% 100% / 16px 1px no-repeat, linear-gradient(var(--text3), var(--text3)) 100% 100% / 1px 16px no-repeat;
+}
+.theme-schematic .project-preview::after { background: none; content: attr(data-fig); inset: auto auto -26px 0; font: 12px var(--mono); color: var(--text3); }
+.theme-schematic .callout { background: var(--surface); color: var(--text); border: 1px solid var(--accent); border-radius: 2px; font-family: var(--mono); font-size: 12px; }
+.theme-schematic .callout::before { border-radius: 0; background: var(--accent); }
+.theme-schematic .duo .ghost { -webkit-text-stroke: 1px var(--engrave-edge); background: none; color: transparent; font-stretch: 100%; opacity: 1; }
+.theme-schematic .specials li::before { border-radius: 0; width: 7px; height: 7px; }
+.theme-schematic .dot { border-radius: 1px; }
+
+/* ---------- Field notes: clean white, a bold grotesk, red-pen notes in the margin */
+:root.theme-notes {
+  --ground: #ffffff; --surface: #ffffff; --raised: #f3f3f2; --line: #e6e6e4; --line-2: #cfcfcc;
+  --text: #121212; --text2: #4a4a48; --text3: #63635f;
+  --accent: #d1342b; --accent-ink: #a5241d; --on-accent: #ffffff;
+  --glow: transparent; --glow-accent: transparent; --grain: 0;
+  --display: 'Archivo', system-ui, sans-serif; --sans: 'Archivo', system-ui, sans-serif;
+  --hand: 'Kalam', 'Comic Sans MS', cursive;
+}
+@media (prefers-color-scheme: dark) {
+  :root.theme-notes {
+    --ground: #141414; --surface: #1b1b1b; --raised: #222221; --line: #2c2c2b; --line-2: #3c3c3a;
+    --text: #f2f1ee; --text2: #b9b8b3; --text3: #9a9994;
+    --accent: #ff7a6b; --accent-ink: #ffa398; --on-accent: #141414;
+  }
+}
+.theme-notes body::before, .theme-notes body::after { display: none; }
+.theme-notes h1, .theme-notes .h2, .theme-notes .project-name { font-weight: 800; font-stretch: 112%; letter-spacing: -0.04em; }
+.theme-notes .index li b, .theme-notes .brand, .theme-notes .numbers dt, .theme-notes .pulse-stats b { font-weight: 750; font-stretch: 108%; }
+.theme-notes .button { border-radius: 6px; background: var(--text); color: var(--ground); }
+.theme-notes .button:hover { background: var(--accent); color: var(--on-accent); }
+.theme-notes .duo .ghost { display: none; }
+/* the labels become handwritten notes with an arrow */
+.theme-notes .callout {
+  background: none; border: 0; box-shadow: none; padding: 0; color: var(--accent);
+  font: 700 21px/1.1 var(--hand); white-space: nowrap; rotate: -4deg;
+}
+.theme-notes .callout::before {
+  content: ''; width: 38px; height: 26px; border-radius: 0; box-shadow: none; background: var(--accent);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 38 26'><path d='M2 4c10 1 20 6 28 16' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'/><path d='M22 20l9 1 0-9' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat center / contain;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 38 26'><path d='M2 4c10 1 20 6 28 16' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'/><path d='M22 20l9 1 0-9' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat center / contain;
+  order: 2;
+}
+.theme-notes .callout.k1 { left: -2%; top: -7%; }
+.theme-notes .callout.k2 { right: 8%; bottom: -6%; rotate: 3deg; }
+.theme-notes .specials li::before { background: none; border: 2px solid var(--c); width: 9px; height: 9px; top: 18px; }
+.theme-notes .project-tag { font-family: var(--hand); font-size: 26px; color: var(--accent); rotate: -1.5deg; transform-origin: left; }
+.theme-notes .wordmark { font-family: 'Kalam', var(--display); font-weight: 700; color: var(--accent); opacity: 0.9; letter-spacing: 0; line-height: 1.7; }
+.theme-notes .kicker { font-family: var(--sans); text-transform: none; letter-spacing: 0; }
