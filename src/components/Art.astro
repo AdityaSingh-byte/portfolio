@@ -1,0 +1,108 @@
+---
+// The drawing beside each project's "hard part". HTML and CSS only; it plays as the card
+// scrolls into view (see .art in global.css). Example data is made up and labelled so.
+interface Props {
+  kind: 'quotes' | 'room' | 'invisible' | 'taps' | 'reader' | 'twice' | 'solver';
+}
+
+const { kind } = Astro.props;
+// Marks standing in for the zero-width characters. The pattern is illustrative.
+const bits = Array.from({ length: 64 }, (_, i) => ((i * 37 + 11) % 7) % 2 === 0);
+---
+<figure class="art">
+  {kind === 'quotes' && (
+    <div class="q-pair">
+      <div class="q-card">
+        <p class="label">Transcript, 10:14 am</p>
+        <p>“So what’s been happening? He’s been <u>limping on his right back leg since Sunday</u>, after a long run at the park. He’s eating fine, but he’s slow getting up in the mornings.”</p>
+      </div>
+      <p class="q-link">quoted in the note</p>
+      <div class="q-card">
+        <p class="label">History <span>1 quote</span></p>
+        <ul><li>Lame on the right hind leg since Sunday, after a long run</li></ul>
+      </div>
+    </div>
+  )}
+
+  {kind === 'room' && (
+    <div class="room">
+      <div class="axis"><span></span><div><span>7:00 pm</span><span>7:30</span><span>8:00</span><span>8:30</span></div></div>
+      <div class="row c-jyotikul"><span>Host</span><div class="track"><i class="bar b-host"></i></div></div>
+      <div class="row c-jyotikul"><span>Co-host</span><div class="track"><i class="bar soft b-cohost"></i></div></div>
+      <div class="row c-jyotikul"><span>Members</span><div class="track"><i class="bar soft b-m1"></i></div></div>
+      <div class="row c-jyotikul"><span></span><div class="track"><i class="bar soft b-m2"></i></div></div>
+      <div class="row c-jyotikul"><span></span><div class="track"><i class="bar soft b-m3"></i></div></div>
+      <div class="row"><span>My recorder</span><div class="track"><i class="bar rec b-rec"></i><i class="empty"></i></div></div>
+      <div class="row"><span>LiveKit</span><div class="track"><i class="bar rec lk b-lk"></i></div></div>
+      <p class="note">Example session. The host leaves at 7:56; members stay, so recording goes on until the room is empty, plus 45 seconds.</p>
+    </div>
+  )}
+
+  {kind === 'invisible' && (
+    <>
+      <p class="arrow-label">What the visitor sends</p>
+      <div class="wa">Hi, I’d like to book a consultation<small>10:42</small></div>
+      <p class="arrow-label">What is really in it: the same text, then a run of characters you cannot see</p>
+      <div class="bits" aria-hidden="true">{bits.map((b) => <i class={b ? 'on' : undefined}></i>)}</div>
+      <p class="arrow-label">What the CRM reads</p>
+      <p class="decoded">[SRC:fb | UTM:diwali-offer/reel-3 | GCLID:none]</p>
+      <figcaption>Example values.</figcaption>
+    </>
+  )}
+
+  {kind === 'taps' && (
+    <>
+      <div class="taps">
+        <figure class="screen-box small"><i class="tap"></i><figcaption>model sees 540 × 1170<br />taps (270, 585)</figcaption></figure>
+        <span class="times" aria-hidden="true">× 2</span>
+        <figure class="screen-box big"><i class="tap"></i><figcaption>phone is 1080 × 2340<br />duet taps (540, 1170)</figcaption></figure>
+      </div>
+      <ul class="guard">
+        <li>the expected phone is the one plugged in</li>
+        <li>the app on screen is the app under test</li>
+        <li>the screen is on and unlocked</li>
+        <li class="stop">otherwise: stop, touch nothing</li>
+      </ul>
+    </>
+  )}
+
+  {kind === 'reader' && (
+    <div class="reader">
+      <div class="f"><b>~/.claude/projects/acme-shop/4e1c….jsonl</b><span>+12 KB</span></div>
+      <div class="f"><b>~/.claude/projects/acme-shop/subagents/2b9….jsonl</b><span>+3 KB</span></div>
+      <div class="f idle"><b>~/.claude/projects/docs-site/a71….jsonl</b><span>+0 KB</span></div>
+      <div class="out">
+        <span><em class="w">waiting</em>Fix flaky search test</span>
+        <span><em class="k">working</em>Checkout: add Apple Pay, 2 issues</span>
+        <span><em class="i">idle</em>Docs: rewrite the API guide</span>
+      </div>
+      <figcaption>From agent-watch’s demo data.</figcaption>
+    </div>
+  )}
+
+  {kind === 'twice' && (
+    <div class="twice">
+      <div class="slip"><div class="meta"><span>AX-SBICRD</span><span>3 Oct</span></div><p>Rs.<mark>7,420</mark> spent on your SBI Card 5512 at CROMA.</p></div>
+      <div class="slip"><div class="meta"><span>AD-IDFCFB</span><span>21 Oct</span></div><p>INR <mark>7,420</mark> debited towards SBI Card bill via CRED.</p></div>
+      <div class="tally">
+        <div class="wrong"><span>Most apps add up to</span><b><s>₹14,840</s></b></div>
+        <div class="right"><span>You actually spent</span><b>₹7,420</b></div>
+      </div>
+    </div>
+  )}
+
+  {kind === 'solver' && (
+    <div class="tree">
+      <div class="board" aria-hidden="true">
+        <i class="t2">2</i><i></i><i></i><i class="t2">2</i>
+        <i></i><i class="t2">2</i><i class="t8">8</i><i class="t2">2</i>
+        <i></i><i class="t4">4</i><i class="t2">2</i><i class="t8">8</i>
+        <i class="t2">2</i><i class="t16">16</i><i></i><i class="t2">2</i>
+      </div>
+      <div class="lvl"><span class="n max">my move: best of up, down, left, right</span></div>
+      <p class="why">then</p>
+      <div class="lvl"><span class="n avg">new tile: a 2 or a 4, in any empty square, averaged</span></div>
+      <p class="why">then my move again, a few turns deep</p>
+    </div>
+  )}
+</figure>

@@ -1,0 +1,39 @@
+---
+// A browser and a phone on one lit stage, with the project's name engraved behind them.
+import Browser from './Browser.astro';
+import Phone from './Phone.astro';
+import type { Shot, Phone as PhoneData } from '../data/site';
+
+interface Props {
+  name: string;
+  url?: string;
+  web?: Shot;
+  phone?: PhoneData;
+  callouts?: string[];
+  eager?: boolean;
+}
+
+const { name, url, web, phone, callouts = [], eager } = Astro.props;
+const layout = web && phone ? 'both' : web ? 'web' : 'phone';
+---
+<div class:list={['duo', `duo--${layout}`]}>
+  <span class="ghost" aria-hidden="true">{name}</span>
+  {web && (
+    <Browser
+      url={url ?? ''}
+      shot={web}
+      widths={layout === 'both' ? [640] : [760]}
+      sizes={layout === 'both' ? '(max-width: 980px) 84vw, 640px' : '(max-width: 980px) 96vw, 760px'}
+      eager={eager}
+    />
+  )}
+  {phone && (
+    <Phone
+      phone={phone}
+      widths={layout === 'both' ? [200] : [260]}
+      sizes={layout === 'both' ? '(max-width: 980px) 25vw, 200px' : '(max-width: 980px) 34vw, 260px'}
+      eager={eager}
+    />
+  )}
+  {callouts.map((c, i) => <span class={`callout k${i + 1}`}>{c}</span>)}
+</div>

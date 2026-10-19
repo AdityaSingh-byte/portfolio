@@ -25,6 +25,7 @@ import smWeb from '../assets/sites/sortmoney-web.jpg';
 import smHome from '../assets/apps/sm-home.png';
 import smActivity from '../assets/apps/sm-activity.png';
 import smHabits from '../assets/apps/sm-habits.png';
+import smPayment from '../assets/apps/sm-payment.png';
 import p2048Home from '../assets/apps/p2048-home.png';
 import p2048Levels from '../assets/apps/p2048-levels.png';
 import p2048Playing from '../assets/apps/p2048-playing.png';
@@ -245,7 +246,7 @@ export const projects: Project[] = [
     media: {
       kind: 'phones',
       phones: [
-        { src: smHome, alt: 'Sort Money home for October', shape: 'classic', caption: 'This month' },
+        { src: smPayment, alt: 'Sort Money: one payment and the bank text it came from', shape: 'classic', caption: 'Where it came from' },
         { src: smActivity, alt: 'Sort Money activity list of payments', shape: 'classic', caption: 'Every payment' },
         { src: smHabits, alt: 'Sort Money spending habits by category', shape: 'classic', caption: 'Habits' },
       ],
@@ -279,18 +280,27 @@ export const projects: Project[] = [
   },
 ];
 
-export const shipped: { date: string; iso: string; text: string }[] = [
-  { date: '19 Oct 2026', iso: '2026-10-19', text: 'duet 0.1.1 published on npm.' },
-  { date: '19 Oct 2026', iso: '2026-10-19', text: 'JyotiKul for iOS sent to App Store review.' },
-  { date: '19 Oct 2026', iso: '2026-10-19', text: 'A call center for Astrodya’s cold callers went live.' },
-  { date: '19 Oct 2026', iso: '2026-10-19', text: 'sortmoney.in went live.' },
-  { date: '16 Oct 2026', iso: '2026-10-16', text: 'JyotiKul 2.6.8 on Google Play: join a live room from up to three devices.' },
-  { date: '16 Oct 2026', iso: '2026-10-16', text: 'agent-watch 0.2.1 released.' },
-  { date: '9 Oct 2026', iso: '2026-10-09', text: 'Built the new myVetbuddy website, with motion graphics and a product film.' },
-  { date: '8 Oct 2026', iso: '2026-10-08', text: 'JyotiKul webinars now record until the last person leaves.' },
-  { date: '7 Oct 2026', iso: '2026-10-07', text: 'jyotikul.com launched. The VetBuddy web app redesign merged.' },
-  { date: '6 Oct 2026', iso: '2026-10-06', text: 'Rendered the 90-second launch film for VetBuddy Client Chats.' },
-  { date: '17 Sep 2026', iso: '2026-09-17', text: 'A browser phone for Astrodya’s CRM, with recordings and transcripts.' },
+export const shipped: { date: string; iso: string; id: string; text: string }[] = [
+  { date: '19 Oct', iso: '2026-10-19', id: 'duet', text: 'duet 0.1.1 published on npm and GitHub Packages.' },
+  { date: '19 Oct', iso: '2026-10-19', id: 'jyotikul', text: 'JyotiKul for iOS sent to App Store review.' },
+  { date: '19 Oct', iso: '2026-10-19', id: 'astrodya', text: 'A call center for the cold-calling team went live, with a line per agent.' },
+  { date: '19 Oct', iso: '2026-10-19', id: 'sort-money', text: 'sortmoney.in went live.' },
+  { date: '16 Oct', iso: '2026-10-16', id: 'jyotikul', text: 'JyotiKul 2.6.8 on Google Play: join a live room from up to three devices, and pin a speaker.' },
+  { date: '16 Oct', iso: '2026-10-16', id: 'agent-watch', text: 'agent-watch 0.2.1 released, with the model router.' },
+  { date: '16 Oct', iso: '2026-10-16', id: 'duet', text: 'duet made public, with its site and three recorded demos.' },
+  { date: '13 Oct', iso: '2026-10-13', id: 'jyotikul', text: 'Push notifications reach iPhones directly through Apple.' },
+  { date: '9 Oct', iso: '2026-10-09', id: 'vetbuddy', text: 'Built the new myVetbuddy website, with an animated hero and a product film.' },
+  { date: '8 Oct', iso: '2026-10-08', id: 'jyotikul', text: 'Webinars now record until the last person leaves the room.' },
+  { date: '7 Oct', iso: '2026-10-07', id: 'jyotikul', text: 'jyotikul.com launched on AWS.' },
+  { date: '7 Oct', iso: '2026-10-07', id: 'vetbuddy', text: 'The redesigned VetBuddy app merged: 37 screens.' },
+  { date: '6 Oct', iso: '2026-10-06', id: 'vetbuddy', text: 'Rendered the 90-second launch film for Client Chats.' },
+  { date: '5 Oct', iso: '2026-10-05', id: 'astrodya', text: 'Sinch became the main WhatsApp provider, without dropping the other four.' },
+  { date: '1 Oct', iso: '2026-10-01', id: 'jyotikul', text: 'Daily panchang in the app, with a card members can share.' },
+  { date: '23 Sep', iso: '2026-09-23', id: '2048', text: '2048 Puzzle finished a 14-tester closed test, 100% crash-free.' },
+  { date: '17 Sep', iso: '2026-09-17', id: 'astrodya', text: 'A browser phone for the CRM, with recordings and transcripts.' },
+  { date: '10 Sep', iso: '2026-09-10', id: 'jyotikul', text: 'Started JyotiKul: five repos, from an empty folder.' },
+  { date: '25 Aug', iso: '2026-08-25', id: 'astrodya', text: 'Consultations transcribed automatically, per speaker, into Hinglish.' },
+  { date: '31 Jul', iso: '2026-07-31', id: 'astrodya', text: 'A 31-screen mobile CRM for the sales team.' },
 ];
 
 export const alsoBuilt: { name: string; text: string }[] = [
@@ -307,3 +317,44 @@ export const jobs: { org: string; role: string; when: string; text: string }[] =
   { org: 'Yellow Owl Publisher', role: 'Full-stack developer', when: 'Jul 2024 to Dec 2025', text: 'HireGlint, AI interviews with live proctoring, and Skill Builder Magazine for 1,000+ learners. Made the APIs 60% faster with Redis and better indexes.' },
   { org: 'MJP Rohilkhand University', role: 'BSc, Computer Science', when: '2020 to 2023', text: 'Bareilly, Uttar Pradesh.' },
 ];
+
+// The hero's feed: real events from the last few days.
+export const feed: { id: string; title: string; when: string }[] = [
+  { id: 'jyotikul', title: 'JyotiKul for iOS sent to App Store review', when: '19 Oct · build 8' },
+  { id: 'duet', title: 'Published duet-qa 0.1.1 to npm', when: '19 Oct · npm' },
+  { id: 'astrodya', title: 'Call center live for the sales team', when: '19 Oct · Astrodya CRM' },
+  { id: 'vetbuddy', title: 'Clinical note drafted from a consult', when: 'about 30 s · VetBuddy' },
+  { id: 'sort-money', title: 'sortmoney.in went live', when: '19 Oct · Cloudflare' },
+  { id: 'agent-watch', title: 'agent-watch 0.2.1 released', when: '16 Oct · GitHub' },
+];
+
+// Two labels on each project's stage in the tour.
+export const callouts: Record<string, string[]> = {
+  vetbuddy: ['Every line linked to the transcript', 'A draft note in about 30 s'],
+  jyotikul: ['Hindi and English', 'Live on Google Play'],
+  astrodya: ['Every WhatsApp lead traced to its ad', 'Five WhatsApp providers'],
+  duet: ['A phone and a browser in one test', 'npm install -g duet-qa'],
+  'agent-watch': ['Which session is waiting on you', 'No server, no open port'],
+  'sort-money': ['Read from your bank’s texts', 'Nothing leaves the phone'],
+  '2048': ['60 solver-checked levels', 'On Google Play'],
+};
+
+// The engraved band: figures, then versions.
+export const band: { figures: [string, string][]; versions: [string, string][] } = {
+  figures: [
+    ['2,394', 'commits since July'],
+    ['1,500', 'backend tests, JyotiKul'],
+    ['88,000', 'checks, 2048 Puzzle'],
+    ['34', 'MCP tools, duet'],
+    ['5', 'WhatsApp providers, Astrodya'],
+    ['30 s', 'to a draft note, VetBuddy'],
+  ],
+  versions: [
+    ['2.6.8', 'JyotiKul on Google Play'],
+    ['0.1.1', 'duet on npm'],
+    ['0.2.1', 'agent-watch'],
+    ['1.78.0', 'Astrodya CRM'],
+    ['1.73.0', 'Astrodya API'],
+    ['v13', '2048 Puzzle'],
+  ],
+};

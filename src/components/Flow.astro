@@ -1,0 +1,24 @@
+---
+// How it works: the steps in order, joined by a line that carries a signal.
+import type { Step } from '../data/cases';
+
+interface Props {
+  steps: Step[];
+}
+
+const { steps } = Astro.props;
+---
+<div class={`flow n${steps.length}`}>
+  <span class="signal" aria-hidden="true"></span>
+  <span class="signal s2" aria-hidden="true"></span>
+  <ol>
+    {steps.map((s) => (
+      <li>
+        <span class="node" aria-hidden="true"></span>
+        <b>{s.name}</b>
+        <p>{s.text}</p>
+        {s.tech && <code>{s.tech}</code>}
+      </li>
+    ))}
+  </ol>
+</div>

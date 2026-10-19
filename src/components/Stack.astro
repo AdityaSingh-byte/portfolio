@@ -1,0 +1,26 @@
+---
+// JyotiKul, layer by layer: five slabs drawn in CSS 3D. Their spacing is a registered
+// custom property animated on the scroll position, so they pull apart as you read.
+const layers = [
+  { name: 'Apps', text: 'Android and iOS in Expo, the website and the staff console in Next.js.' },
+  { name: 'API', text: 'NestJS on Fastify. Every route has one Zod contract that validates it and writes the OpenAPI spec.' },
+  { name: 'Services', text: 'Workers for push (FCM and Apple), an outbox relay, event export and the webinar recorder.' },
+  { name: 'Data', text: 'Postgres 17 on RDS for everything that matters, Redis for queues and locks.' },
+  { name: 'AWS', text: 'EC2, Fargate and S3 in Mumbai, described in CloudFormation, deployed by GitHub with no stored keys.' },
+];
+---
+<figure class="stack3d c-jyotikul">
+  <div class="stack-scene" aria-hidden="true">
+    <div class="stack-inner">
+      {layers.slice().reverse().map((l, i) => (
+        <div class={`slab z${i}`}><b>{l.name}</b></div>
+      ))}
+    </div>
+  </div>
+  <figcaption class="stack-legend">
+    <p class="kicker">JyotiKul, layer by layer</p>
+    <ol>
+      {layers.map((l) => <li><b>{l.name}</b><span>{l.text}</span></li>)}
+    </ol>
+  </figcaption>
+</figure>

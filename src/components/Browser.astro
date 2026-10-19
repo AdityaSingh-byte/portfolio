@@ -14,8 +14,10 @@ interface Props {
 const { url, shot, widths, sizes, eager } = Astro.props;
 ---
 <div class="browser">
-  <div class="browser__bar" aria-hidden="true"><span class="browser__url">{url}</span></div>
-  <div class="browser__view">
+  <div class="bar" aria-hidden="true">
+    <span class="url"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2.5" y="5.5" width="7" height="5" rx="1"></rect><path d="M4 5.5V4a2 2 0 0 1 4 0v1.5"></path></svg>{url}</span>
+  </div>
+  <div class="view">
     <Shot src={shot.src} srcDark={shot.srcDark} alt={shot.alt} widths={widths} sizes={sizes} eager={eager} />
   </div>
 </div>
